@@ -9,7 +9,7 @@
 
 :root {
     --sidebar-w: 280px;
-    --bg: #e8f2fa;
+    --bg: #1a73e8;
     --surface: #f6fafd;
     --border: #d4e2f0;
     --text: #1a1c1e;
@@ -556,7 +556,6 @@ body {
     }
 
     function selectNote(id) {
-        // Save current first
         flushSave();
         loadNoteToEditor(id);
         renderNoteList();
@@ -652,7 +651,6 @@ body {
         }
     });
 
-    // Ctrl+N new note
     document.addEventListener('keydown', function(e) {
         if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
             e.preventDefault();
@@ -867,12 +865,10 @@ body {
 
     // --- Run tests ---
     function runAllTests() {
-        // Snapshot current state
         var savedNotes = JSON.parse(JSON.stringify(notes));
         var savedSelectedId = selectedId;
         var savedSearch = searchQuery;
 
-        // Reset for testing
         notes = [];
         selectedId = null;
         searchQuery = '';
@@ -892,12 +888,10 @@ body {
                 results.push({ name: tc.name, pass: false, error: e.message || String(e) });
                 failed++;
             }
-            // Reset state between tests
             notes = [];
             searchQuery = '';
         }
 
-        // Restore state
         notes = savedNotes;
         selectedId = savedSelectedId;
         searchQuery = savedSearch;
@@ -911,10 +905,9 @@ body {
             showEditor(false);
         }
 
-        // Display results
         var allPass = failed === 0;
-        testSummary.textContent = (allPass ? '全部通过' : '') +
-            ' ' + passed + '/' + testCases.length + ' 通过' +
+        testSummary.textContent = (allPass ? '全部通过 ' : '') +
+            passed + '/' + testCases.length + ' 通过' +
             (failed > 0 ? '，' + failed + ' 失败' : '');
         testSummary.className = 'test-summary ' + (allPass ? 'all-pass' : 'has-fail');
 
