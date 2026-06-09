@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -408,6 +408,7 @@ body {
 }
 .theme-toggle-btn:hover { background: var(--hover-bg); color: var(--text); }
 .theme-toggle-btn svg { flex-shrink: 0; }
+}
 </style>
 </head>
 <body>
@@ -427,25 +428,24 @@ body {
             <input type="text" class="search-input" id="search-input" placeholder="搜索笔记...">
         </div>
         <div id="note-list"></div>
+
         <div class="theme-toggle-bar">
-            <button class="theme-toggle-btn" id="btn-theme" title="切换深浅色主�?>
+            <button class="theme-toggle-btn" id="btn-theme" title="切换深浅色主题">
                 <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 <span id="theme-label">深色模式</span>
             </button>
         </div>
-
-    
     </div>
 
     <!-- Main content -->
     <div id="main">
         <div id="editor-container">
             <div class="editor-header">
-                <input type="text" class="title-input" id="note-title" placeholder="无标�?>
+                <input type="text" class="title-input" id="note-title" placeholder="无标题">
             </div>
             <div class="editor-body">
-                <textarea class="content-textarea" id="note-content" placeholder="开始输�?.."></textarea>
+                <textarea class="content-textarea" id="note-content" placeholder="开始输入..."></textarea>
             </div>
             <div class="status-bar">
                 <span id="status-time"></span>
@@ -453,7 +453,7 @@ body {
             </div>
         </div>
         <div class="empty-editor" id="empty-editor">
-            <span>选择左侧笔记开始编辑，或点击�? 新建」创建笔�?/span>
+            <span>选择左侧笔记开始编辑，或点击「+ 新建」创建笔记</span>
         </div>
     </div>
 </div>
@@ -498,7 +498,7 @@ body {
     var testSummary  = document.getElementById('test-summary');
     var testResults  = document.getElementById('test-results');
 
-    // ===== Theme ====="
+    // ===== Theme =====
     var THEME_KEY = 'notes_app_theme_v1';
     var themeIconSun  = document.getElementById('theme-icon-sun');
     var themeIconMoon = document.getElementById('theme-icon-moon');
@@ -523,7 +523,6 @@ body {
         var saved = localStorage.getItem(THEME_KEY) || 'light';
         applyTheme(saved);
     }
-
 
     // ===== Data Layer =====
     function loadNotes() {
@@ -601,7 +600,7 @@ body {
         var filtered = getFilteredNotes();
         if (filtered.length === 0) {
             noteListEl.innerHTML = '<div class="empty-list">' +
-                (searchQuery ? '无匹配结�? : '暂无笔记<br>点击�? 新建」开�?) +
+                (searchQuery ? '无匹配结果' : '暂无笔记<br>点击「+ 新建」开始') +
                 '</div>';
             return;
         }
@@ -612,7 +611,7 @@ body {
             html +=
                 '<div class="note-item' + active + '" data-id="' + n.id + '">' +
                     '<div class="note-item-row">' +
-                        '<span class="note-item-title">' + esc(n.title || '无标�?) + '</span>' +
+                        '<span class="note-item-title">' + esc(n.title || '无标题') + '</span>' +
                         '<button class="note-item-del" data-action="del" data-id="' + n.id + '" title="删除">×</button>' +
                     '</div>' +
                     '<div class="note-item-preview">' + esc(trimTo(n.content, 60) || '空白笔记') + '</div>' +
@@ -660,7 +659,7 @@ body {
     function updateWordCount() {
         var text = contentArea.value.trim();
         var chars = text.length;
-        wordCountEl.textContent = chars + ' �?;
+        wordCountEl.textContent = chars + ' 字';
     }
 
     // ===== Helpers =====
@@ -682,8 +681,8 @@ body {
         var days = Math.floor(diff / 86400000);
 
         if (minutes < 1) return '刚刚';
-        if (minutes < 60) return minutes + ' 分钟�?;
-        if (hours < 24) return hours + ' 小时�?;
+        if (minutes < 60) return minutes + ' 分钟前';
+        if (hours < 24) return hours + ' 小时前';
         if (days < 7) return days + ' 天前';
         return new Date(ts).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' });
     }
@@ -722,8 +721,8 @@ body {
     document.getElementById('btn-delete').addEventListener('click', function() {
         if (!selectedId) return;
         var note = findNote(selectedId);
-        var label = note && note.title ? '�? + note.title + '�? : '这条笔记';
-        if (confirm('确定要删�? + label + '吗？此操作不可撤销�?)) {
+        var label = note && note.title ? '「' + note.title + '」' : '这条笔记';
+        if (confirm('确定要删除' + label + '吗？此操作不可撤销。')) {
             deleteNote(selectedId);
         }
     });
@@ -749,8 +748,8 @@ body {
             e.stopPropagation();
             var id = delBtn.getAttribute('data-id');
             var note = findNote(id);
-            var label = note && note.title ? '�? + note.title + '�? : '这条笔记';
-            if (confirm('确定要删�? + label + '吗？')) {
+            var label = note && note.title ? '「' + note.title + '」' : '这条笔记';
+            if (confirm('确定要删除' + label + '吗？')) {
                 deleteNote(id);
             }
             return;
@@ -785,48 +784,48 @@ body {
         notes = [];
         var note = createNote();
         assert(!!note.id, '笔记应有 id');
-        assert(typeof note.title === 'string', 'title 应为字符�?);
-        assert(typeof note.content === 'string', 'content 应为字符�?);
-        assert(typeof note.createdAt === 'number' && note.createdAt > 0, 'createdAt 应为时间�?);
-        assert(note.updatedAt === note.createdAt, '新建�?updatedAt 应等�?createdAt');
+        assert(typeof note.title === 'string', 'title 应为字符串');
+        assert(typeof note.content === 'string', 'content 应为字符串');
+        assert(typeof note.createdAt === 'number' && note.createdAt > 0, 'createdAt 应为时间戳');
+        assert(note.updatedAt === note.createdAt, '新建时 updatedAt 应等于 createdAt');
     });
 
     test('创建笔记：笔记保存到 notes 数组', function() {
         notes = [];
         var note = createNote('测试标题', '测试内容');
-        assert(notes.length === 1, 'notes 数组应有 1 条笔�?);
-        assert(notes[0].title === '测试标题', '标题应匹�?);
-        assert(notes[0].content === '测试内容', '内容应匹�?);
+        assert(notes.length === 1, 'notes 数组应有 1 条笔记');
+        assert(notes[0].title === '测试标题', '标题应匹配');
+        assert(notes[0].content === '测试内容', '内容应匹配');
     });
 
     test('持久化：笔记写入 localStorage', function() {
         notes = [];
-        var note = createNote('持久化测�?);
+        var note = createNote('持久化测试');
         saveNotes();
         var raw = localStorage.getItem(STORAGE_KEY);
-        assert(raw !== null, 'localStorage 中应有数�?);
+        assert(raw !== null, 'localStorage 中应有数据');
         var parsed = JSON.parse(raw);
-        assert(parsed.length === 1, '应有一条笔�?);
-        assert(parsed[0].title === '持久化测�?, '标题应匹�?);
+        assert(parsed.length === 1, '应有一条笔记');
+        assert(parsed[0].title === '持久化测试', '标题应匹配');
     });
 
     test('加载：从 localStorage 正确加载笔记', function() {
-        var testNote = [{ id: 'load_test_1', title: '加载测试', content: '内容�?, createdAt: 1000, updatedAt: 2000 }];
+        var testNote = [{ id: 'load_test_1', title: '加载测试', content: '内容体', createdAt: 1000, updatedAt: 2000 }];
         localStorage.setItem(STORAGE_KEY, JSON.stringify(testNote));
         loadNotes();
-        assert(notes.length === 1, '应加�?1 条笔�?);
-        assert(notes[0].id === 'load_test_1', 'ID 应匹�?);
-        assert(notes[0].title === '加载测试', '标题应匹�?);
+        assert(notes.length === 1, '应加载 1 条笔记');
+        assert(notes[0].id === 'load_test_1', 'ID 应匹配');
+        assert(notes[0].title === '加载测试', '标题应匹配');
     });
 
     test('更新笔记：修改标题和内容', function() {
         notes = [];
-        var note = createNote('旧标�?, '旧内�?);
-        var result = updateNote(note.id, { title: '新标�?, content: '新内�? });
-        assert(result !== null, 'updateNote 应返回笔记对�?);
+        var note = createNote('旧标题', '旧内容');
+        var result = updateNote(note.id, { title: '新标题', content: '新内容' });
+        assert(result !== null, 'updateNote 应返回笔记对象');
         var updated = findNote(note.id);
-        assert(updated.title === '新标�?, '标题应更新为新标�?);
-        assert(updated.content === '新内�?, '内容应更新为新内�?);
+        assert(updated.title === '新标题', '标题应更新为新标题');
+        assert(updated.content === '新内容', '内容应更新为新内容');
     });
 
     test('更新笔记：updatedAt 时间戳应更新', function() {
@@ -835,23 +834,23 @@ body {
         var oldTs = note.updatedAt;
         var start = Date.now();
         while (Date.now() === start) { /* busy-wait for 1ms */ }
-        var updated = updateNote(note.id, { title: '�? });
-        assert(updated.updatedAt > oldTs, 'updatedAt 应大于旧�?);
+        var updated = updateNote(note.id, { title: '改' });
+        assert(updated.updatedAt > oldTs, 'updatedAt 应大于旧值');
     });
 
     test('更新不存在的笔记：应返回 null', function() {
         notes = [];
         var result = updateNote('non_existent_id', { title: 'x' });
-        assert(result === null, '不存在的笔记更新应返�?null');
+        assert(result === null, '不存在的笔记更新应返回 null');
     });
 
     test('删除笔记：从 notes 数组移除', function() {
         notes = [];
         var note = createNote();
-        assert(notes.length === 1, '删除前应�?1 �?);
+        assert(notes.length === 1, '删除前应有 1 条');
         var result = deleteNote(note.id);
-        assert(result === true, 'deleteNote 应返�?true');
-        assert(notes.length === 0, '删除后应�?0 �?);
+        assert(result === true, 'deleteNote 应返回 true');
+        assert(notes.length === 0, '删除后应为 0 条');
     });
 
     test('删除笔记：从 localStorage 移除', function() {
@@ -861,14 +860,14 @@ body {
         deleteNote(note.id);
         var raw = localStorage.getItem(STORAGE_KEY);
         var parsed = JSON.parse(raw);
-        assert(parsed.length === 0, 'localStorage 中应无笔�?);
+        assert(parsed.length === 0, 'localStorage 中应无笔记');
     });
 
     test('删除不存在的笔记：应返回 false', function() {
         notes = [];
         createNote();
         var result = deleteNote('non_existent_id');
-        assert(result === false, '删除不存在的笔记应返�?false');
+        assert(result === false, '删除不存在的笔记应返回 false');
         assert(notes.length === 1, '笔记数量不应变化');
     });
 
@@ -878,7 +877,7 @@ body {
         var n2 = createNote('第二');
         updateNote(n1.id, { title: '更新后的第一' });
         loadNotes();
-        assert(notes[0].id === n1.id, '最近更新的笔记应在最�?);
+        assert(notes[0].id === n1.id, '最近更新的笔记应在最前');
     });
 
     test('搜索：按标题匹配', function() {
@@ -887,7 +886,7 @@ body {
         createNote('会议纪要', '');
         searchQuery = '项目';
         var filtered = getFilteredNotes();
-        assert(filtered.length === 1, '应匹配到 1 �?);
+        assert(filtered.length === 1, '应匹配到 1 条');
         assert(filtered[0].title === '项目计划', '应为项目计划');
         searchQuery = '';
     });
@@ -895,21 +894,21 @@ body {
     test('搜索：按内容匹配', function() {
         notes = [];
         createNote('笔记A', '这是一个关于预算的内容');
-        createNote('笔记B', '这是另一个话�?);
+        createNote('笔记B', '这是另一个话题');
         searchQuery = '预算';
         var filtered = getFilteredNotes();
-        assert(filtered.length === 1, '应匹配到 1 �?);
+        assert(filtered.length === 1, '应匹配到 1 条');
         searchQuery = '';
     });
 
-    test('搜索：空查询返回所有笔�?, function() {
+    test('搜索：空查询返回所有笔记', function() {
         notes = [];
         createNote();
         createNote();
         createNote();
         searchQuery = '';
         var filtered = getFilteredNotes();
-        assert(filtered.length === 3, '应返回全�?3 �?);
+        assert(filtered.length === 3, '应返回全部 3 条');
     });
 
     test('搜索：无匹配时返回空数组', function() {
@@ -921,16 +920,16 @@ body {
         searchQuery = '';
     });
 
-    test('搜索：不区分大小�?, function() {
+    test('搜索：不区分大小写', function() {
         notes = [];
         createNote('Hello World');
         searchQuery = 'hello';
         var filtered = getFilteredNotes();
-        assert(filtered.length === 1, '小写搜索应匹�?);
+        assert(filtered.length === 1, '小写搜索应匹配');
         searchQuery = '';
     });
 
-    test('笔记 ID 唯一性：批量创建不重�?, function() {
+    test('笔记 ID 唯一性：批量创建不重复', function() {
         notes = [];
         var ids = {};
         for (var i = 0; i < 30; i++) {
@@ -985,13 +984,13 @@ body {
         var allPass = failed === 0;
         testSummary.textContent = (allPass ? '全部通过 ' : '') +
             passed + '/' + testCases.length + ' 通过' +
-            (failed > 0 ? '�? + failed + ' 失败' : '');
+            (failed > 0 ? '，' + failed + ' 失败' : '');
         testSummary.className = 'test-summary ' + (allPass ? 'all-pass' : 'has-fail');
 
         var html = '';
         for (var r = 0; r < results.length; r++) {
             var res = results[r];
-            var icon = res.pass ? '<span class="test-icon pass">�?/span>' : '<span class="test-icon fail">�?/span>';
+            var icon = res.pass ? '<span class="test-icon pass">✓</span>' : '<span class="test-icon fail">✗</span>';
             html += '<div class="test-result">' + icon +
                 '<div><span class="test-name">' + (r + 1) + '. ' + esc(res.name) + '</span>' +
                 (res.error ? '<div class="test-error">' + esc(res.error) + '</div>' : '') +
