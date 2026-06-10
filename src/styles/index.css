@@ -94,23 +94,27 @@ body {
     font-size: 16px;
     font-weight: 600;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     letter-spacing: 0;
+}
 
 .sidebar-brand {
     display: flex;
     align-items: center;
     gap: 10px;
     min-width: 0;
+    flex: 1;
+    overflow: hidden;
 }
 
 .sidebar-logo {
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
+
     border-radius: 5px;
 }
-}
-
 .header-actions { display: flex; gap: 6px; align-items: center; }
 
 .btn {
