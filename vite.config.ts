@@ -6,20 +6,16 @@ export default defineConfig({
   main: {
     build: {
       outDir: 'out/main',
-      rollupOptions: {
-        input: {
-          index: resolve(__dirname, 'electron/main.ts')
-        }
+      lib: {
+        entry: resolve(__dirname, 'electron/main.ts')
       }
     }
   },
   preload: {
     build: {
       outDir: 'out/preload',
-      rollupOptions: {
-        input: {
-          index: resolve(__dirname, 'electron/preload.ts')
-        }
+      lib: {
+        entry: resolve(__dirname, 'electron/preload.ts')
       }
     }
   },
