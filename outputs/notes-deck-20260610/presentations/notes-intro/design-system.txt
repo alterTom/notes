@@ -1,0 +1,75 @@
+slide size: 1280x720
+
+background system:
+  - cover: dark ink (#1a1a2e) with centered content
+  - section dividers: dark ink (#1a1a2e)  
+  - content slides: warm white (#faf8f5)
+  - appendix/dark slides: #1a1a2e
+
+typography:
+  - titles: 38px, weight 700, color #1a1a2e (dark bg: #ffffff)
+  - kickers: 13px, all-caps, letter-spacing 0.15em, color #e07b5a, weight 600
+  - body: 18px, weight 400, color #3d3d4f, line-height 1.6
+  - labels/captions: 13px, weight 500, color #6b6b80
+  - footers/sources: 10px, color #9e9eb0
+
+color palette:
+  - base/neutral: #faf8f5 (warm white bg), #1a1a2e (dark ink)
+  - main accent: #e07b5a (warm terracotta — used for kickers, highlights, diagram accents)
+  - secondary: #4a7c96 (dusty blue — used for architecture boxes, secondary data)
+  - support: #8b9d83 (sage green — code blocks, tertiary elements)
+  - surface: #f0ede8 (light warm gray — subtle containers), #2a2a3e (dark surface)
+
+chart grammar: n/a (no data charts)
+
+diagram grammar:
+  - boxes: rounded 4px, 2px stroke, 20px internal padding
+  - connectors: 2px lines, orthogonal routing, arrow only when direction critical
+  - lanes: subtle dashed borders, light fill
+  - labels: 13px weight 500 inside boxes, 12px weight 400 on connectors
+
+connector grammar:
+  - solid lines for data flow
+  - dashed lines for indirect relationships
+  - arrow heads only for directional flow
+  - connector color: #9e9eb0
+
+container grammar:
+  - card-like containers: 8px radius, 1px solid #e8e3db, 24px padding
+  - no nested cards
+  - boxes for architecture diagrams: 4px radius, 2px stroke
+
+footer grammar:
+  - slide number right-aligned, 10px
+  - project name left-aligned: 笔记 · Notes
+
+page marker grammar:
+  - small dot or dash before slide number
+
+title/kicker grammar:
+  - kicker: 13px all-caps, main accent, top-left of content area
+  - title below kicker: 38px bold, dark ink
+  - vertical gap between kicker and title: 8px
+
+brand asset policy:
+  - logo.svg verified from project root
+  - no fabricated marks
+
+allowed layout families:
+  - cover (centered)
+  - editorial two-column
+  - diagram-centric
+  - side-by-side comparison
+  - layered stack
+  - annotated visual
+  - table/matrix
+  - architecture map
+  - list-with-visual
+  - section divider
+
+banned motifs:
+  - card grids
+  - gradient orbs / blobs
+  - decorative icons
+  - rounded cards as default scaffolding
+  - split hero with card

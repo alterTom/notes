@@ -1,0 +1,21 @@
+task mode: create
+primary deck-profile: product-platform
+secondary profile gates: engineering-platform (architecture slides)
+required proof objects:
+  - Platform map / workflow architecture
+  - Product design system visual
+  - Tech architecture diagram
+  - Adoption/expansion proof (not applicable, substitute: feature depth)
+  - Product-to-financial linkage (not applicable, substitute: design rationale)
+source/asset requirements:
+  - logo.svg exists in project root
+  - No external data sources needed
+brand authenticity constraints:
+  - Use project logo.svg as identity asset
+  - No fabricated marks or pseudo-logos
+profile-specific QA gates:
+  - Show product system, not feature list
+  - Architecture labels must be concrete
+  - Connectors must have explicit semantics
+  - No repeated card grids
+known missing inputs: none

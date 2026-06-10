@@ -1,0 +1,39 @@
+thesis: 笔记 (Notes) is a thoughtfully architected desktop Markdown note-taking client built on Electron + React, where product design and technical architecture mutually reinforce simplicity.
+
+audience: product reviewers, technical evaluators, team members  
+
+one-line arc: From user experience to system architecture — a desktop note-taking app where every design choice has an engineering rationale, and every technical decision serves the editing experience.
+
+slide list:
+
+1. Cover — 笔记：简洁的桌面笔记应用 / subtitle: product design × technical architecture
+   - proof: logo + version badge
+   
+2. Product Overview — 双栏架构将导航与编辑解耦，让聚焦成为默认状态。
+   - proof: annotated product screenshot / layout diagram
+   
+3. Design System — 明暗双主题 + 零依赖Markdown渲染，用克制而非功能取胜。
+   - proof: theme comparison side-by-side, design token table
+   
+4. Editing Experience — 编辑即预览：实时Markdown语法高亮让写作和阅读合为一体。
+   - proof: editor screenshot with syntax highlighting detail
+   
+5. Data Flow & State — useReducer + Context 的单向数据流，让状态变化可追踪。
+   - proof: state architecture diagram
+   
+6. Component Architecture — 组件树从App到叶子的分层清晰，每个模块职责单一。
+   - proof: component tree diagram
+   
+7. Technology Stack — Electron + React + TypeScript + Vite，现代桌面应用技术栈。
+   - proof: tech stack layers diagram
+   
+8. Core Libraries — 零外部Markdown依赖的自研渲染器是项目的技术脊梁。
+   - proof: markdown parser architecture with syntax support table
+   
+9. IPC & Native Integration — 主进程负责文件系统和原生菜单，渲染进程专注UI。
+   - proof: IPC architecture diagram with menu/import/export flow
+   
+10. Testing & Quality — Vitest + Testing Library 覆盖核心模块和组件行为。
+    - proof: test architecture with coverage highlights
+
+omission notes: no financial metrics, no adoption data (project is v1.0.0)

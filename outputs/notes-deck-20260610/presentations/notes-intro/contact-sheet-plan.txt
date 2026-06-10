@@ -1,0 +1,18 @@
+10 slides, 7 distinct macro-layout families:
+
+slide 01 — COVER: centered logo + title + subtitle on dark ink bg
+slide 02 — PRODUCT OVERVIEW: editorial two-column (left: product description, right: layout diagram)
+slide 03 — DESIGN SYSTEM: side-by-side comparison (light/dark theme split + design tokens table below)
+slide 04 — EDITING EXPERIENCE: annotated visual (large editor screenshot with callouts pointing to features)
+slide 05 — DATA FLOW & STATE: architecture map (state flow diagram with boxes and connectors)
+slide 06 — COMPONENT ARCHITECTURE: layered stack (component tree from App down to leaf nodes)
+slide 07 — TECHNOLOGY STACK: layered stack (3 tiers: Electron shell / React renderer / Core libs)
+slide 08 — CORE LIBRARIES: list-with-visual (markdown syntax table left, parser architecture right)
+slide 09 — IPC & NATIVE: diagram-centric (IPC flow diagram between main and renderer)
+slide 10 — TESTING & QUALITY: table/matrix (test coverage breakdown with architecture callout)
+
+Rhythm check:
+- 01 cover, 02 editorial, 03 comparison, 04 annotated, 05 map, 06 stack, 07 stack, 08 list+visual, 09 diagram, 10 table
+- No 3 consecutive same layouts
+- Only 0 card-grid slides
+- Layout families: cover, editorial 2-col, comparison, annotated, architecture map, layered stack, list+visual, diagram-centric, table/matrix
