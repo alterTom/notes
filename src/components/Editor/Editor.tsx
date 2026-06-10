@@ -4,6 +4,8 @@ import { TitleInput } from './TitleInput'
 import { ContentArea } from './ContentArea'
 import { StatusBar } from './StatusBar'
 
+type EditorMode = 'edit' | 'preview'
+
 interface EditorProps {
   note: Note
   onUpdate: (id: string, updates: { title?: string; content?: string }) => void
@@ -13,6 +15,7 @@ interface EditorProps {
 export function Editor({ note, onUpdate, onDelete }: EditorProps) {
   const [title, setTitle] = useState(note.title)
   const [content, setContent] = useState(note.content)
+  const [mode, setMode] = useState<EditorMode>('edit')
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastSavedRef = useRef({ title: note.title, content: note.content })
 
@@ -62,8 +65,26 @@ export function Editor({ note, onUpdate, onDelete }: EditorProps) {
 
   return (
     <div id="editor-container" className="visible">
-      <TitleInput value={title} onChange={handleTitleChange} />
-      <ContentArea value={content} onChange={handleContentChange} />
+      <div className="editor-header">
+        <TitleInput value={title} onChange={handleTitleChange} />
+        <div className="mode-toggle">
+          <button
+            className={`mode-btn ${mode === 'edit' ? 'active' : ''}`}
+            onClick={() => setMode('edit')}
+            title="编辑模式"
+          >
+            编辑
+          </button>
+          <button
+            className={`mode-btn ${mode === 'preview' ? 'active' : ''}`}
+            onClick={() => setMode('preview')}
+            title="预览模式"
+          >
+            预览
+          </button>
+        </div>
+      </div>
+      <ContentArea value={content} onChange={handleContentChange} mode={mode} />
       <StatusBar
         updatedAt={note.updatedAt}
         contentLength={wordCount}
