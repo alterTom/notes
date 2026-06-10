@@ -1,5 +1,6 @@
 import { useNotesContext } from '../../store/NotesContext'
 import { useNotes } from '../../hooks/useNotes'
+import logoUrl from '../../../logo.svg'
 
 interface SidebarHeaderProps {
   onRunTests: () => void
@@ -10,7 +11,10 @@ export function SidebarHeader({ onRunTests }: SidebarHeaderProps) {
 
   return (
     <div className="sidebar-header">
-      <h1>笔记</h1>
+      <div className="sidebar-brand">
+        <img src={logoUrl} alt="Notes" className="sidebar-logo" />
+        <h1>笔记</h1>
+      </div>
       <div className="header-actions">
         <button
           className="btn btn-primary"
