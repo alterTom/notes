@@ -74,7 +74,8 @@ interface NotesContextValue {
 
 const NotesContext = createContext<NotesContextValue | null>(null)
 
-export function NotesProvider({ children }: { children: ReactNode }) {
+interface NotesProviderProps { children: ReactNode }
+export function NotesProvider({ children }: NotesProviderProps) {
   const [state, dispatch] = useReducer(notesReducer, initialState)
 
   return (
