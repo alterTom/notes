@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review"
+  short_description: "Review code for common issues"
+  default_prompt: "Review the codebase for compliance with project standards"
