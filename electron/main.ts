@@ -14,7 +14,7 @@ function createWindow(): void {
     minHeight: 400,
     title: '笔记',
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false

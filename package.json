@@ -2,7 +2,7 @@
   "name": "notes",
   "version": "1.0.0",
   "description": "笔记桌面客户端",
-  "main": "./out/main/index.js",
+  "main": "./out/main/main.js",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
