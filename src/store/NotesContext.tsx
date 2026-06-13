@@ -10,6 +10,7 @@ export interface NotesState {
 
 export type NotesAction =
   | { type: 'SET_NOTES'; notes: Note[] }
+  | { type: 'HYDRATE_NOTES'; notes: Note[] }
   | { type: 'ADD_NOTE'; note: Note }
   | { type: 'UPDATE_NOTE'; id: string; updates: Partial<Pick<Note, 'title' | 'content'>> }
   | { type: 'DELETE_NOTE'; id: string }
@@ -28,6 +29,28 @@ export function notesReducer(state: NotesState, action: NotesAction): NotesState
   switch (action.type) {
     case 'SET_NOTES':
       return { ...state, notes: action.notes }
+
+    case 'HYDRATE_NOTES': {
+      const notesById = new Map<string, Note>()
+
+      for (const note of action.notes) {
+        notesById.set(note.id, note)
+      }
+
+      for (const note of state.notes) {
+        const existing = notesById.get(note.id)
+        if (!existing || note.updatedAt >= existing.updatedAt) {
+          notesById.set(note.id, note)
+        }
+      }
+
+      const notes = [...notesById.values()].sort((a, b) => b.updatedAt - a.updatedAt)
+      const selectedId = state.selectedId && notesById.has(state.selectedId)
+        ? state.selectedId
+        : notes[0]?.id ?? null
+
+      return { ...state, notes, selectedId }
+    }
 
     case 'ADD_NOTE':
       return {

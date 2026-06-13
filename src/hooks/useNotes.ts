@@ -28,10 +28,7 @@ export function useNotes() {
     let cancelled = false
 
     function useLoadedNotes(loaded: Note[]) {
-      dispatch({ type: 'SET_NOTES', notes: loaded })
-      if (loaded.length > 0) {
-        dispatch({ type: 'SELECT_NOTE', id: loaded[0].id })
-      }
+      dispatch({ type: 'HYDRATE_NOTES', notes: loaded })
       hasLoadedRef.current = true
     }
 
