@@ -488,6 +488,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
 }
 
 .status-actions .btn-sm:last-child {
@@ -496,6 +497,14 @@ body {
 
 .status-actions .btn-sm:last-child:hover {
     background: var(--danger-bg);
+}
+
+.save-error {
+    color: var(--danger);
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .empty-editor {

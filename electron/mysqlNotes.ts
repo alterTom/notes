@@ -89,3 +89,17 @@ export async function saveNotesToMySql(notes: Note[]): Promise<void> {
     connection.release()
   }
 }
+
+export async function saveNoteToMySql(note: Note): Promise<void> {
+  await ensureSchema()
+
+  await getPool().execute(`
+    INSERT INTO notes (id, title, content, created_at, updated_at)
+    VALUES (:id, :title, :content, :createdAt, :updatedAt)
+    ON DUPLICATE KEY UPDATE
+      title = VALUES(title),
+      content = VALUES(content),
+      created_at = VALUES(created_at),
+      updated_at = VALUES(updated_at)
+  `, note)
+}

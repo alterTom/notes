@@ -100,7 +100,10 @@ describe('笔记核心逻辑（17 个原有用例）', () => {
     const originalAPI = window.electronAPI
     window.electronAPI = undefined
 
-    await expect(saveNotesToDatabase([])).resolves.toBe(false)
+    await expect(saveNotesToDatabase([])).resolves.toEqual({
+      success: false,
+      error: 'Electron 数据库接口不可用，请在桌面应用中保存。'
+    })
 
     window.electronAPI = originalAPI
   })

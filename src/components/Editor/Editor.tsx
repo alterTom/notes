@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Note } from '../../lib/notes'
+import type { SaveResult } from '../../lib/storage'
 import { TitleInput } from './TitleInput'
 import { ContentArea } from './ContentArea'
 import { StatusBar } from './StatusBar'
@@ -10,7 +11,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 interface EditorProps {
   note: Note
   onUpdate: (id: string, updates: { title?: string; content?: string }) => void
-  onSave: (id: string, updates: { title?: string; content?: string }) => Promise<boolean>
+  onSave: (id: string, updates: { title?: string; content?: string }) => Promise<SaveResult>
   onDelete: (id: string) => void
 }
 
@@ -19,6 +20,7 @@ export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
   const [content, setContent] = useState(note.content)
   const [mode, setMode] = useState<EditorMode>('edit')
   const [saveState, setSaveState] = useState<SaveState>('idle')
+  const [saveError, setSaveError] = useState<string | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastSavedRef = useRef({ title: note.title, content: note.content })
 
@@ -27,6 +29,7 @@ export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
     setTitle(note.title)
     setContent(note.content)
     setSaveState('idle')
+    setSaveError(null)
     lastSavedRef.current = { title: note.title, content: note.content }
   }, [note.id])
 
@@ -45,6 +48,7 @@ export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
         onUpdate(note.id, { title: newTitle, content: newContent })
         lastSavedRef.current = { title: newTitle, content: newContent }
         setSaveState('idle')
+        setSaveError(null)
       }
     }, 500)
   }, [note.id, onUpdate])
@@ -52,12 +56,14 @@ export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
   const handleTitleChange = (value: string) => {
     setTitle(value)
     setSaveState('idle')
+    setSaveError(null)
     scheduleSave(value, content)
   }
 
   const handleContentChange = (value: string) => {
     setContent(value)
     setSaveState('idle')
+    setSaveError(null)
     scheduleSave(title, value)
   }
 
@@ -72,9 +78,16 @@ export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
     if (timerRef.current) clearTimeout(timerRef.current)
 
     setSaveState('saving')
+    setSaveError(null)
     lastSavedRef.current = { title, content }
-    const ok = await onSave(note.id, { title, content })
-    setSaveState(ok ? 'saved' : 'error')
+    const result = await onSave(note.id, { title, content })
+    if (result.success) {
+      setSaveState('saved')
+      setSaveError(null)
+    } else {
+      setSaveState('error')
+      setSaveError(result.error)
+    }
   }
 
   const wordCount = content.trim().length
@@ -105,6 +118,7 @@ export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
         updatedAt={note.updatedAt}
         contentLength={wordCount}
         saveState={saveState}
+        saveError={saveError}
         onSave={handleSave}
         onDelete={handleDelete}
       />

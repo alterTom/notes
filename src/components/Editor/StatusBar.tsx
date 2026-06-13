@@ -4,6 +4,7 @@ interface StatusBarProps {
   updatedAt: number
   contentLength: number
   saveState: 'idle' | 'saving' | 'saved' | 'error'
+  saveError: string | null
   onSave: () => void
   onDelete: () => void
 }
@@ -15,7 +16,7 @@ const saveLabels = {
   error: '保存失败'
 }
 
-export function StatusBar({ updatedAt, contentLength, saveState, onSave, onDelete }: StatusBarProps) {
+export function StatusBar({ updatedAt, contentLength, saveState, saveError, onSave, onDelete }: StatusBarProps) {
   return (
     <div className="status-bar">
       <span>最后修改：{formatRelativeTime(updatedAt)}</span>
@@ -25,10 +26,11 @@ export function StatusBar({ updatedAt, contentLength, saveState, onSave, onDelet
           className={`btn btn-sm btn-save ${saveState}`}
           onClick={onSave}
           disabled={saveState === 'saving'}
-          title="保存到 MySQL"
+          title={saveError || '保存到 MySQL'}
         >
           {saveLabels[saveState]}
         </button>
+        {saveError && <span className="save-error">{saveError}</span>}
         <button className="btn btn-sm" onClick={onDelete}>
           删除笔记
         </button>

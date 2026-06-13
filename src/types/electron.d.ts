@@ -5,6 +5,7 @@ export interface ElectronAPI {
   exportNote: (title: string, content: string) => Promise<{ success: boolean; error?: string }>
   loadNotes: () => Promise<{ success: true; notes: Note[] } | { success: false; error?: string }>
   saveNotes: (notes: Note[]) => Promise<{ success: boolean; error?: string }>
+  saveNote: (note: Note) => Promise<{ success: boolean; error?: string }>
   _listenersSetup?: boolean
 }
 

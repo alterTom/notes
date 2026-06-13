@@ -19,6 +19,9 @@ const electronAPI = {
   },
   saveNotes: (notes: Note[]): Promise<SaveNotesResult> => {
     return ipcRenderer.invoke('notes:save', notes)
+  },
+  saveNote: (note: Note): Promise<SaveNotesResult> => {
+    return ipcRenderer.invoke('notes:save-one', note)
   }
 }
 

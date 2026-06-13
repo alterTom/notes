@@ -2,7 +2,7 @@ import { app, BrowserWindow, Menu, dialog, ipcMain, type MenuItemConstructorOpti
 import { join } from 'path'
 import { readFile, writeFile } from 'fs/promises'
 import type { Note } from '../src/lib/notes'
-import { loadNotesFromMySql, saveNotesToMySql } from './mysqlNotes'
+import { loadNotesFromMySql, saveNoteToMySql, saveNotesToMySql } from './mysqlNotes'
 
 const isDev = !app.isPackaged
 
@@ -167,6 +167,17 @@ ipcMain.handle('notes:save', async (_event, notes: Note[]) => {
     await saveNotesToMySql(notes)
     return { success: true }
   } catch (err) {
+    console.error('Failed to save notes to MySQL:', err)
+    return { success: false, error: String(err) }
+  }
+})
+
+ipcMain.handle('notes:save-one', async (_event, note: Note) => {
+  try {
+    await saveNoteToMySql(note)
+    return { success: true }
+  } catch (err) {
+    console.error('Failed to save note to MySQL:', err)
     return { success: false, error: String(err) }
   }
 })

@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { createNote, findNote, getFilteredNotes, sortNotes } from '../lib/notes'
 import type { Note } from '../lib/notes'
-import { loadNotes, loadNotesFromDatabase, saveNotes, saveNotesToDatabase } from '../lib/storage'
+import {
+  loadNotes,
+  loadNotesFromDatabase,
+  saveNoteToDatabase,
+  saveNotes,
+  saveNotesToDatabase,
+  type SaveResult
+} from '../lib/storage'
 import { useNotesContext } from '../store/NotesContext'
 
 let persistenceOwnerMounted = false
@@ -90,20 +97,27 @@ export function useNotes() {
     dispatch({ type: 'UPDATE_NOTE', id, updates })
   }, [dispatch])
 
-  const handleSaveNote = useCallback(async (id: string, updates: { title?: string; content?: string }) => {
+  const handleSaveNote = useCallback(async (
+    id: string,
+    updates: { title?: string; content?: string }
+  ): Promise<SaveResult> => {
     const now = Date.now()
     let found = false
+    let savedNote: Note | null = null
     const nextNotes = state.notes.map(note => {
       if (note.id !== id) return note
       found = true
-      return { ...note, ...updates, updatedAt: now }
+      savedNote = { ...note, ...updates, updatedAt: now }
+      return savedNote
     })
 
-    if (!found) return false
+    if (!found || !savedNote) {
+      return { success: false, error: '找不到要保存的笔记。' }
+    }
 
     dispatch({ type: 'SET_NOTES', notes: nextNotes })
     saveNotes(nextNotes)
-    return saveNotesToDatabase(nextNotes)
+    return saveNoteToDatabase(savedNote)
   }, [dispatch, state.notes])
 
   const handleDeleteNote = useCallback((id: string) => {
