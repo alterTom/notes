@@ -19,6 +19,28 @@ export function saveNotes(notes: Note[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(notes))
 }
 
+export async function loadNotesFromDatabase(): Promise<Note[] | null> {
+  if (!window.electronAPI?.loadNotes) return null
+
+  try {
+    const result = await window.electronAPI.loadNotes()
+    return result.success ? result.notes : null
+  } catch {
+    return null
+  }
+}
+
+export async function saveNotesToDatabase(notes: Note[]): Promise<boolean> {
+  if (!window.electronAPI?.saveNotes) return false
+
+  try {
+    const result = await window.electronAPI.saveNotes(notes)
+    return result.success
+  } catch {
+    return false
+  }
+}
+
 export function loadTheme(): 'light' | 'dark' {
   const saved = localStorage.getItem(THEME_KEY)
   return saved === 'dark' ? 'dark' : 'light'

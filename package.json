@@ -13,7 +13,8 @@
     "lint": "eslint src/ --ext .ts,.tsx"
   },
   "dependencies": {
-    "electron-updater": "^6.3.9"
+    "electron-updater": "^6.3.9",
+    "mysql2": "^3.22.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",

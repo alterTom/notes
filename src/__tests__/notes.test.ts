@@ -8,7 +8,13 @@ import {
   sortNotes,
   type Note
 } from '../lib/notes'
-import { STORAGE_KEY, saveNotes, loadNotes } from '../lib/storage'
+import {
+  STORAGE_KEY,
+  loadNotes,
+  loadNotesFromDatabase,
+  saveNotes,
+  saveNotesToDatabase
+} from '../lib/storage'
 
 describe('笔记核心逻辑（17 个原有用例）', () => {
   let notes: Note[]
@@ -79,6 +85,24 @@ describe('笔记核心逻辑（17 个原有用例）', () => {
     expect(loaded).toHaveLength(1)
     expect(loaded[0].id).toBe('load_test_1')
     expect(loaded[0].title).toBe('加载测试')
+  })
+
+  it('4.1 数据库不可用时：读取返回 null', async () => {
+    const originalAPI = window.electronAPI
+    window.electronAPI = undefined
+
+    await expect(loadNotesFromDatabase()).resolves.toBeNull()
+
+    window.electronAPI = originalAPI
+  })
+
+  it('4.2 数据库不可用时：保存返回 false', async () => {
+    const originalAPI = window.electronAPI
+    window.electronAPI = undefined
+
+    await expect(saveNotesToDatabase([])).resolves.toBe(false)
+
+    window.electronAPI = originalAPI
   })
 
   it('5. 更新笔记：修改标题和内容', () => {

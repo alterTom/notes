@@ -1,6 +1,8 @@
 import { app, BrowserWindow, Menu, dialog, ipcMain, type MenuItemConstructorOptions } from 'electron'
 import { join } from 'path'
 import { readFile, writeFile } from 'fs/promises'
+import type { Note } from '../src/lib/notes'
+import { loadNotesFromMySql, saveNotesToMySql } from './mysqlNotes'
 
 const isDev = !app.isPackaged
 
@@ -145,6 +147,24 @@ ipcMain.handle('export-note', async (_event, { title, content }: { title: string
   if (result.canceled || !result.filePath) return { success: false }
   try {
     await writeFile(result.filePath, `${title}\n\n${content}`, 'utf-8')
+    return { success: true }
+  } catch (err) {
+    return { success: false, error: String(err) }
+  }
+})
+
+ipcMain.handle('notes:load', async () => {
+  try {
+    const notes = await loadNotesFromMySql()
+    return { success: true, notes }
+  } catch (err) {
+    return { success: false, error: String(err) }
+  }
+})
+
+ipcMain.handle('notes:save', async (_event, notes: Note[]) => {
+  try {
+    await saveNotesToMySql(notes)
     return { success: true }
   } catch (err) {
     return { success: false, error: String(err) }
