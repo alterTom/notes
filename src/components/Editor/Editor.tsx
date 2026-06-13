@@ -5,17 +5,20 @@ import { ContentArea } from './ContentArea'
 import { StatusBar } from './StatusBar'
 
 type EditorMode = 'edit' | 'preview'
+type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
 interface EditorProps {
   note: Note
   onUpdate: (id: string, updates: { title?: string; content?: string }) => void
+  onSave: (id: string, updates: { title?: string; content?: string }) => Promise<boolean>
   onDelete: (id: string) => void
 }
 
-export function Editor({ note, onUpdate, onDelete }: EditorProps) {
+export function Editor({ note, onUpdate, onSave, onDelete }: EditorProps) {
   const [title, setTitle] = useState(note.title)
   const [content, setContent] = useState(note.content)
   const [mode, setMode] = useState<EditorMode>('edit')
+  const [saveState, setSaveState] = useState<SaveState>('idle')
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastSavedRef = useRef({ title: note.title, content: note.content })
 
@@ -23,6 +26,7 @@ export function Editor({ note, onUpdate, onDelete }: EditorProps) {
   useEffect(() => {
     setTitle(note.title)
     setContent(note.content)
+    setSaveState('idle')
     lastSavedRef.current = { title: note.title, content: note.content }
   }, [note.id])
 
@@ -40,17 +44,20 @@ export function Editor({ note, onUpdate, onDelete }: EditorProps) {
       if (prev.title !== newTitle || prev.content !== newContent) {
         onUpdate(note.id, { title: newTitle, content: newContent })
         lastSavedRef.current = { title: newTitle, content: newContent }
+        setSaveState('idle')
       }
     }, 500)
   }, [note.id, onUpdate])
 
   const handleTitleChange = (value: string) => {
     setTitle(value)
+    setSaveState('idle')
     scheduleSave(value, content)
   }
 
   const handleContentChange = (value: string) => {
     setContent(value)
+    setSaveState('idle')
     scheduleSave(title, value)
   }
 
@@ -59,6 +66,15 @@ export function Editor({ note, onUpdate, onDelete }: EditorProps) {
     if (confirm(`确定要删除${label}吗？此操作不可撤销。`)) {
       onDelete(note.id)
     }
+  }
+
+  const handleSave = async () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+
+    setSaveState('saving')
+    lastSavedRef.current = { title, content }
+    const ok = await onSave(note.id, { title, content })
+    setSaveState(ok ? 'saved' : 'error')
   }
 
   const wordCount = content.trim().length
@@ -88,6 +104,8 @@ export function Editor({ note, onUpdate, onDelete }: EditorProps) {
       <StatusBar
         updatedAt={note.updatedAt}
         contentLength={wordCount}
+        saveState={saveState}
+        onSave={handleSave}
         onDelete={handleDelete}
       />
     </div>

@@ -9,7 +9,7 @@ import type { TestSuite } from './lib/test-runner'
 
 function AppInner() {
   const { state, dispatch } = useNotesContext()
-  const { selectedNote, handleNewNote, handleUpdateNote, handleDeleteNote } = useNotes()
+  const { selectedNote, handleNewNote, handleUpdateNote, handleSaveNote, handleDeleteNote } = useNotes()
   const [testSuite, setTestSuite] = useState<TestSuite | null>(null)
 
   const closeTestPanel = useCallback(() => {
@@ -47,6 +47,7 @@ function AppInner() {
           <Editor
             note={selectedNote}
             onUpdate={handleUpdateNote}
+            onSave={handleSaveNote}
             onDelete={handleDeleteNote}
           />
         ) : (

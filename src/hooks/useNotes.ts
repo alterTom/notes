@@ -1,18 +1,26 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { createNote, findNote, getFilteredNotes, sortNotes } from '../lib/notes'
+import type { Note } from '../lib/notes'
 import { loadNotes, loadNotesFromDatabase, saveNotes, saveNotesToDatabase } from '../lib/storage'
 import { useNotesContext } from '../store/NotesContext'
+
+let persistenceOwnerMounted = false
 
 export function useNotes() {
   const { state, dispatch } = useNotesContext()
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasLoadedRef = useRef(false)
+  const ownsPersistenceRef = useRef(false)
 
   // Load notes on mount
   useEffect(() => {
+    if (persistenceOwnerMounted) return
+
+    persistenceOwnerMounted = true
+    ownsPersistenceRef.current = true
     let cancelled = false
 
-    function useLoadedNotes(loaded: ReturnType<typeof loadNotes>) {
+    function useLoadedNotes(loaded: Note[]) {
       dispatch({ type: 'SET_NOTES', notes: loaded })
       if (loaded.length > 0) {
         dispatch({ type: 'SELECT_NOTE', id: loaded[0].id })
@@ -46,12 +54,14 @@ export function useNotes() {
 
     return () => {
       cancelled = true
+      persistenceOwnerMounted = false
+      ownsPersistenceRef.current = false
     }
   }, [dispatch])
 
   // Persist on every change
   useEffect(() => {
-    if (!hasLoadedRef.current) return
+    if (!ownsPersistenceRef.current || !hasLoadedRef.current) return
 
     saveNotes(state.notes)
     if (saveTimer.current) clearTimeout(saveTimer.current)
@@ -80,6 +90,22 @@ export function useNotes() {
     dispatch({ type: 'UPDATE_NOTE', id, updates })
   }, [dispatch])
 
+  const handleSaveNote = useCallback(async (id: string, updates: { title?: string; content?: string }) => {
+    const now = Date.now()
+    let found = false
+    const nextNotes = state.notes.map(note => {
+      if (note.id !== id) return note
+      found = true
+      return { ...note, ...updates, updatedAt: now }
+    })
+
+    if (!found) return false
+
+    dispatch({ type: 'SET_NOTES', notes: nextNotes })
+    saveNotes(nextNotes)
+    return saveNotesToDatabase(nextNotes)
+  }, [dispatch, state.notes])
+
   const handleDeleteNote = useCallback((id: string) => {
     dispatch({ type: 'DELETE_NOTE', id })
   }, [dispatch])
@@ -96,6 +122,7 @@ export function useNotes() {
     handleNewNote,
     handleSelectNote,
     handleUpdateNote,
+    handleSaveNote,
     handleDeleteNote
   }
 }

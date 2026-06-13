@@ -154,10 +154,21 @@ body {
     padding: 5px 10px;
     font-size: 12px;
     background: transparent;
-    color: var(--danger);
     border-radius: 6px;
 }
-.btn-sm:hover { background: var(--danger-bg); }
+.btn-sm:hover { background: var(--hover-bg); }
+
+.btn-save {
+    color: var(--accent);
+}
+.btn-save:hover { background: var(--accent-bg); }
+.btn-save.saving,
+.btn-save:disabled {
+    color: var(--text-muted);
+    cursor: default;
+}
+.btn-save.saved { color: #188038; }
+.btn-save.error { color: var(--danger); }
 
 /* Mode toggle in editor header */
 .mode-toggle {
@@ -473,6 +484,20 @@ body {
     flex-shrink: 0;
 }
 
+.status-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-actions .btn-sm:last-child {
+    color: var(--danger);
+}
+
+.status-actions .btn-sm:last-child:hover {
+    background: var(--danger-bg);
+}
+
 .empty-editor {
     flex: 1;
     display: flex;
@@ -562,7 +587,6 @@ body {
 .word-count {
     font-size: 12px;
     color: var(--text-muted);
-    margin-right: 16px;
 }
 
 /* ===== Theme Toggle ===== */
