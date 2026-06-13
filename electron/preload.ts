@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import type { Note } from '../src/lib/notes'
 
 type MenuActionCallback = (action: string, data?: unknown) => void
@@ -7,9 +7,14 @@ type SaveNotesResult = { success: boolean; error?: string }
 
 const electronAPI = {
   onMenuAction: (callback: MenuActionCallback) => {
-    ipcRenderer.on('menu-action', (_event, action: string, data?: unknown) => {
+    const listener = (_event: IpcRendererEvent, action: string, data?: unknown) => {
       callback(action, data)
-    })
+    }
+
+    ipcRenderer.on('menu-action', listener)
+    return () => {
+      ipcRenderer.removeListener('menu-action', listener)
+    }
   },
   exportNote: (title: string, content: string) => {
     return ipcRenderer.invoke('export-note', { title, content })

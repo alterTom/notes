@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { NotesProvider, useNotesContext } from './store/NotesContext'
 import { useNotes } from './hooks/useNotes'
 import { useKeyboard } from './hooks/useKeyboard'
@@ -30,14 +30,9 @@ function AppInner() {
     }
   }, [handleNewNote])
 
-  // Set up IPC listeners
-  if (typeof window !== 'undefined' && (window as any).electronAPI) {
-    const api = (window as any).electronAPI
-    if (!api._listenersSetup) {
-      api._listenersSetup = true
-      api.onMenuAction?.(onMenuAction)
-    }
-  }
+  useEffect(() => {
+    return window.electronAPI?.onMenuAction?.(onMenuAction)
+  }, [onMenuAction])
 
   return (
     <div id="app">
